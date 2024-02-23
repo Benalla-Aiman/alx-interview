@@ -3,35 +3,49 @@
 
 import sys
 
-def solve(n):
-    positions = [-1] * n
-    place_queen(positions, 0, n)
+def print_solution(board):
+    solution = [[i, board[i]] for i in range(len(board))]
+    print(solution)
 
-def place_queen(positions, target_row, n):
-    if target_row == n:
-        print_solution(positions)
-        return
-
-    for column in range(n):
-        if check_place(positions, target_row, column):
-            positions[target_row] = column
-            place_queen(positions, target_row + 1, n)
-
-def check_place(positions, ocuppied_rows, column):
-    for i in range(ocuppied_rows):
-        if positions[i] == column or \
-            positions[i] - i == column - ocuppied_rows or \
-            positions[i] + i == column + ocuppied_rows:
+def is_safe(board, row, col):
+    for i in range(col):
+        if board[i] == row or \
+            board[i] - i == row - col or \
+            board[i] + i == row + col:
             return False
     return True
 
-def print_solution(positions):
-    result = []
-    for row in range(n):
-        for column in range(n):
-            if positions[row] == column:
-                result.append([row, column])
-    print(result)
+def solve_n_queens(board, col):
+    n = len(board)
+    if col == n:
+        print_solution(board)
+        return
 
-n = int(sys.argv[1])
-solve(n)
+    for i in range(n):
+        if is_safe(board, i, col):
+            board[col] = i
+            solve_n_queens(board, col + 1)
+
+def check_args():
+    if len(sys.argv) != 2:
+        print("Usage: nqueens N")
+        sys.exit(1)
+
+    if not sys.argv[1].isdigit():
+        print("N must be a number")
+        sys.exit(1)
+
+    n = int(sys.argv[1])
+    if n < 4:
+        print("N must be at least 4")
+        sys.exit(1)
+
+    return n
+
+def main():
+    n = check_args()
+    board = [-1] * n
+    solve_n_queens(board, 0)
+
+if __name__ == "__main__":
+    main()
