@@ -9,7 +9,7 @@ def solve(n):
 
 def place_queen(positions, target_row, n):
     if target_row == n:
-        print_board(positions)
+        print_solution(positions)
         return
 
     for column in range(n):
@@ -25,16 +25,13 @@ def check_place(positions, ocuppied_rows, column):
             return False
     return True
 
-def print_board(positions):
+def print_solution(positions):
+    result = []
     for row in range(n):
-        line = ""
         for column in range(n):
             if positions[row] == column:
-                line += "Q "
-            else:
-                line += ". "
-        print(line)
-    print("\n")
+                result.append([row, column])
+    print(result)
 
 n = int(sys.argv[1])
 solve(n)
